@@ -11,7 +11,6 @@ class Card
 end
 
 class FileManager
-  # chomp ends of card attribute strings?
 
   def self.parse_text_file(file_name)
     @raw_data = File.open(file_name, 'r').readlines
@@ -19,15 +18,15 @@ class FileManager
     @parsed_data = @raw_data.each_slice(2).to_a
   end
 
-  def self.save_text_file!(new_file_name, data) # this is to make sure we dont overwrite old file
+  # def self.save_text_file!(new_file_name, data) # ? this is to make sure we dont overwrite old file
 
-  end
+  # end
 
-  def self.fake_data
-    @fake_data = ["To create a second name for the variable or method.\n", "alias\n", "\n", "\n", "\n", "A command that appends two or more objects together.\n", "and\n"]
-    @fake_data.delete("\n")
-    @fake_data = @fake_data.each_slice(2).to_a
-  end
+  # def self.fake_data
+  #   @fake_data = ["To create a second name for the variable or method.\n", "alias\n", "\n", "\n", "\n", "A command that appends two or more objects together.\n", "and\n"]
+  #   @fake_data.delete("\n")
+  #   @fake_data = @fake_data.each_slice(2).to_a
+  # end
 
 end
 
@@ -47,8 +46,12 @@ class Deck
 
 end
 
-
 class DeckViewer
+
+  def self.render_to_console(string)
+    puts string
+  end
+
 end
 
 class Application
@@ -58,32 +61,30 @@ class Application
     deck = Deck.new(data)
     deck.fill_deck_with_card_objects
     
-    puts "Welcome to MY DECK. To play, just enter the correct term for each definition. To quit, enter 'QUIT'."
+    DeckViewer.render_to_console("Welcome to MY DECK. To play, just enter the correct term for each definition. To quit, enter QUIT.")
+    
 
     counter = 0
+    correct_card_counter = 0
     until counter == deck.object_data.length
-      puts ""
-      puts "Definition"
-      puts deck.object_data[counter].definition
+      DeckViewer.render_to_console("\nDefinition")
+      DeckViewer.render_to_console(deck.object_data[counter].definition)
       input = gets
       case input
         when deck.object_data[counter].term
           deck.object_data[counter].solved = true
-          puts "VIP"
+          deck.object_data.each {|card| correct_card_counter += 1 if card.solved == true}
+          DeckViewer.render_to_console("VIP")
         when "QUIT\n"
+          DeckViewer.render_to_console("\nYou got #{correct_card_counter}/#{deck.object_data.length} cards correct! You should probably study more.")
           exit
         else
-          puts "Needs ID."
+          DeckViewer.render_to_console("Needs ID.")
       end
     counter += 1
-    end 
-
-    correct_card_counter = 0
-    deck.object_data.each do |card|
-      correct_card_counter += 1 if card.solved == true
     end
-
-    puts "\nYou got #{correct_card_counter} cards correct! You should probably study more."
+  
+    DeckViewer.render_to_console("\nYou got #{correct_card_counter}/#{deck.object_data.length} cards correct! You should probably study more.")
 
     # EXTEND?:
     # iterate over entire array, if any are still false, ask em to play. 
@@ -93,37 +94,3 @@ class Application
 end
 
 Application.run
-
-# p FileManager.parse_text_file('flashcard_samples.txt')
-
-# p deck.object_data
-# look at a card, read it
-# think about input
-# in our deck, method that returns the definition of the card
-# 
-
-# FileManager(oldfile).save(newfile)
-
-# File.(file)
-
-# FileManager.save_text_file(..)
-
-
-
-
-
-
-
-
-
-
-
-
-# data = FileManager.parse_text_file(file_name)
-    # Deck.new(data)
-
-    # open a file  ---filemanager
-    # var file 
-    # Deck.add_card({key => :value, key2 => value2})
-    # var file_other
-    # Deck.add_card({key => :valued, key2 => value2d})
